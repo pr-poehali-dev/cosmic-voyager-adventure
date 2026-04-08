@@ -14,21 +14,15 @@ const MENU_ITEMS = [
 ];
 
 const Index = () => {
-  const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Record<string, boolean>>({});
   const [booking, setBooking] = useState({ name: "", phone: "", date: "", guests: "2", time: "20:00" });
   const [bookingDone, setBookingDone] = useState(false);
+  const [bookingId, setBookingId] = useState<number | null>(null);
   const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingError, setBookingError] = useState("");
   const [menuFilter, setMenuFilter] = useState("Все");
 
   useEffect(() => {
-    const confirmed = sessionStorage.getItem("age_confirmed");
-    if (confirmed) setAgeConfirmed(true);
-  }, []);
-
-  useEffect(() => {
-    if (!ageConfirmed) return;
     const observers: Record<string, IntersectionObserver> = {};
     const sectionIds = ["hero", "menu", "booking", "cta"];
     sectionIds.forEach((id) => {
@@ -46,12 +40,7 @@ const Index = () => {
       observers[id].observe(element);
     });
     return () => Object.values(observers).forEach((o) => o.disconnect());
-  }, [ageConfirmed]);
-
-  const handleAgeConfirm = () => {
-    sessionStorage.setItem("age_confirmed", "true");
-    setAgeConfirmed(true);
-  };
+  }, []);
 
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +55,7 @@ const Index = () => {
       const data = await res.json();
       const parsed = typeof data === "string" ? JSON.parse(data) : data;
       if (parsed.ok) {
+        setBookingId(parsed.id);
         setBookingDone(true);
       } else {
         setBookingError(parsed.error || "Ошибка при бронировании");
@@ -79,47 +69,6 @@ const Index = () => {
 
   const categories = ["Все", "Закуски", "Горячее", "Коктейли"];
   const filtered = menuFilter === "Все" ? MENU_ITEMS : MENU_ITEMS.filter((i) => i.category === menuFilter);
-
-  if (!ageConfirmed) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: `url(${HERO_IMAGE})` }}
-        />
-        <div className="absolute inset-0 bg-black/70" />
-        <div className="relative z-10 max-w-md w-full text-center">
-          <div className="p-10 border border-accent/30 rounded-3xl bg-black/80 backdrop-blur-xl">
-            <div className="w-20 h-20 rounded-full bg-accent/10 border-2 border-accent/40 flex items-center justify-center mx-auto mb-6">
-              <span className="text-3xl font-black text-accent">21+</span>
-            </div>
-            <h1 className="text-4xl font-display font-black mb-3 bg-gradient-to-r from-white to-accent/60 bg-clip-text text-transparent">
-              Ретро-клуб
-            </h1>
-            <div className="w-16 h-0.5 bg-accent/40 mx-auto mb-6" />
-            <p className="text-muted-foreground mb-2 text-base leading-relaxed">
-              Добро пожаловать. Этот сайт содержит информацию о заведении, где продаётся алкоголь.
-            </p>
-            <p className="text-white/60 text-sm mb-8">Вам уже исполнился 21 год?</p>
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={handleAgeConfirm}
-                className="w-full px-8 py-4 bg-gradient-to-r from-accent to-accent/80 text-black rounded-full font-bold text-lg hover:shadow-xl hover:shadow-accent/30 transition-all"
-              >
-                Да, мне есть 21
-              </button>
-              <button className="w-full px-8 py-4 border border-white/10 text-white/50 rounded-full font-medium text-sm hover:border-white/20 transition-all">
-                Нет, мне нет 21
-              </button>
-            </div>
-            <p className="text-white/30 text-xs mt-6">
-              Нажимая «Да», вы подтверждаете свой возраст и соглашаетесь с правилами заведения
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -284,11 +233,15 @@ const Index = () => {
                     <Icon name="Check" size={36} className="text-accent" />
                   </div>
                   <h3 className="text-3xl font-display font-black text-white mb-3">Стол забронирован!</h3>
-                  <p className="text-muted-foreground mb-2">Мы свяжемся с вами для подтверждения в течение 15 минут.</p>
-                  <p className="text-accent font-medium">{booking.date} · {booking.time} · {booking.guests} гостей</p>
+                  <p className="text-muted-foreground mb-6">Мы свяжемся с вами для подтверждения в течение 15 минут.</p>
+                  <div className="inline-flex flex-col items-center gap-1 px-8 py-4 border border-accent/30 rounded-2xl bg-accent/5 mb-4">
+                    <span className="text-xs text-white/40 uppercase tracking-widest">Номер бронирования</span>
+                    <span className="text-4xl font-black text-accent">#{bookingId}</span>
+                  </div>
+                  <p className="text-white/50 text-sm mb-8">{booking.date} · {booking.time} · {booking.guests} гостей</p>
                   <button
-                    onClick={() => setBookingDone(false)}
-                    className="mt-8 px-6 py-3 border border-accent/30 text-white rounded-full text-sm hover:bg-accent/10 transition"
+                    onClick={() => { setBookingDone(false); setBookingId(null); }}
+                    className="px-6 py-3 border border-accent/30 text-white rounded-full text-sm hover:bg-accent/10 transition"
                   >
                     Забронировать ещё раз
                   </button>

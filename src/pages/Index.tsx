@@ -85,7 +85,7 @@ const Index = () => {
           </nav>
           <a
             href="#booking"
-            className="px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-accent to-accent/80 text-black rounded-full hover:shadow-lg hover:shadow-accent/40 transition-all"
+            className="px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-accent to-accent/80 text-white rounded-full hover:shadow-lg hover:shadow-accent/40 transition-all"
           >
             Забронировать
           </a>
@@ -123,7 +123,7 @@ const Index = () => {
             <div className="flex gap-4 flex-col sm:flex-row">
               <a
                 href="#booking"
-                className="group px-8 py-4 bg-gradient-to-r from-accent to-accent/90 text-black rounded-full hover:shadow-2xl hover:shadow-accent/50 transition-all font-bold text-lg flex items-center gap-3 justify-center"
+                className="group px-8 py-4 bg-gradient-to-r from-accent to-accent/90 text-white rounded-full hover:shadow-2xl hover:shadow-accent/50 transition-all font-bold text-lg flex items-center gap-3 justify-center"
               >
                 Забронировать стол
                 <Icon name="ArrowRight" size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -176,7 +176,7 @@ const Index = () => {
                 onClick={() => setMenuFilter(cat)}
                 className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${
                   menuFilter === cat
-                    ? "bg-accent text-black"
+                    ? "bg-accent text-white"
                     : "border border-accent/20 text-white/60 hover:border-accent/40 hover:text-white"
                 }`}
               >
@@ -305,7 +305,7 @@ const Index = () => {
                           onClick={() => setBooking({ ...booking, guests: n })}
                           className={`w-12 h-12 rounded-xl text-sm font-bold transition-all ${
                             booking.guests === n
-                              ? "bg-accent text-black"
+                              ? "bg-accent text-white"
                               : "border border-accent/20 text-white/60 hover:border-accent/40 hover:text-white"
                           }`}
                         >
@@ -316,7 +316,7 @@ const Index = () => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full py-4 bg-gradient-to-r from-accent to-accent/80 text-black rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-accent/30 transition-all flex items-center justify-center gap-3"
+                    className="w-full py-4 bg-gradient-to-r from-accent to-accent/80 text-white rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-accent/30 transition-all flex items-center justify-center gap-3"
                   >
                     <Icon name="CalendarCheck" size={20} />
                     {bookingLoading ? "Отправляем..." : "Подтвердить бронирование"}
@@ -367,7 +367,7 @@ const Index = () => {
 
           <a
             href="#booking"
-            className="group inline-flex px-10 py-5 bg-gradient-to-r from-accent to-accent/90 text-black rounded-full hover:shadow-2xl hover:shadow-accent/40 transition-all font-bold text-lg items-center gap-3"
+            className="group inline-flex px-10 py-5 bg-gradient-to-r from-accent to-accent/90 text-white rounded-full hover:shadow-2xl hover:shadow-accent/40 transition-all font-bold text-lg items-center gap-3"
           >
             Забронировать стол
             <Icon name="ArrowRight" size={20} className="group-hover:translate-x-1 transition-transform" />

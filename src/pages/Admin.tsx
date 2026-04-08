@@ -97,7 +97,7 @@ const Admin = () => {
             </div>
             <button
               type="submit"
-              className="w-full py-3 bg-gradient-to-r from-accent to-accent/80 text-black rounded-xl font-bold text-base hover:shadow-xl hover:shadow-accent/30 transition-all"
+              className="w-full py-3 bg-gradient-to-r from-accent to-accent/80 text-white rounded-xl font-bold text-base hover:shadow-xl hover:shadow-accent/30 transition-all"
             >
               Войти
             </button>
@@ -170,7 +170,7 @@ const Admin = () => {
               onClick={() => setFilter(f.key)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 filter === f.key
-                  ? "bg-accent text-black"
+                  ? "bg-accent text-white"
                   : "border border-accent/20 text-white/60 hover:border-accent/40 hover:text-white"
               }`}
             >

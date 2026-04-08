@@ -1,0 +1,32 @@
+{
+  "tests": [
+    {
+      "name": "Create booking",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Тест Тестов",
+        "phone": "+7 999 000 00 00",
+        "date": "2026-05-01",
+        "time": "20:00",
+        "guests": "2"
+      },
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get bookings with wrong password",
+      "method": "GET",
+      "path": "/?password=wrong",
+      "expectedStatus": 403,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get bookings with correct password",
+      "method": "GET",
+      "path": "/?password=1968",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    }
+  ]
+}

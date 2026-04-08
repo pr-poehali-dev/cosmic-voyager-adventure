@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Icon from "@/components/ui/icon";
 
 const HERO_IMAGE = "https://cdn.poehali.dev/projects/d684a005-0838-40c8-bd58-3dcf97271270/files/0baf8008-b172-4055-8d31-bf4272d80799.jpg";
+const API_URL = "https://functions.poehali.dev/5b7ee685-b67c-4e74-8c3f-2c821b9b238a";
 
 const MENU_ITEMS = [
   { category: "Закуски", emoji: "🧀", name: "Сырная тарелка", desc: "5 видов выдержанного сыра с мёдом и орехами", price: "690 ₽" },
@@ -17,6 +18,8 @@ const Index = () => {
   const [visibleSections, setVisibleSections] = useState<Record<string, boolean>>({});
   const [booking, setBooking] = useState({ name: "", phone: "", date: "", guests: "2", time: "20:00" });
   const [bookingDone, setBookingDone] = useState(false);
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingError, setBookingError] = useState("");
   const [menuFilter, setMenuFilter] = useState("Все");
 
   useEffect(() => {
@@ -50,9 +53,28 @@ const Index = () => {
     setAgeConfirmed(true);
   };
 
-  const handleBooking = (e: React.FormEvent) => {
+  const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
-    setBookingDone(true);
+    setBookingLoading(true);
+    setBookingError("");
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(booking),
+      });
+      const data = await res.json();
+      const parsed = typeof data === "string" ? JSON.parse(data) : data;
+      if (parsed.ok) {
+        setBookingDone(true);
+      } else {
+        setBookingError(parsed.error || "Ошибка при бронировании");
+      }
+    } catch {
+      setBookingError("Ошибка сети. Попробуйте ещё раз.");
+    } finally {
+      setBookingLoading(false);
+    }
   };
 
   const categories = ["Все", "Закуски", "Горячее", "Коктейли"];
@@ -344,8 +366,11 @@ const Index = () => {
                     className="w-full py-4 bg-gradient-to-r from-accent to-accent/80 text-black rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-accent/30 transition-all flex items-center justify-center gap-3"
                   >
                     <Icon name="CalendarCheck" size={20} />
-                    Подтвердить бронирование
+                    {bookingLoading ? "Отправляем..." : "Подтвердить бронирование"}
                   </button>
+                  {bookingError && (
+                    <p className="text-center text-red-400 text-sm">{bookingError}</p>
+                  )}
                   <p className="text-center text-white/30 text-xs">
                     Мы перезвоним для подтверждения. Бронь без предоплаты.
                   </p>
